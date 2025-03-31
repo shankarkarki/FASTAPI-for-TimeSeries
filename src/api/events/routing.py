@@ -1,25 +1,26 @@
 import os
 from fastapi import APIRouter
-from .schema import( 
-EventSchema , 
+from .models import( 
+EventModel , 
 EventListSchema , 
 EventCreateSchema,
 EventUpdateSchema)
 
+from api.db.config import DATABASE_URL
 
 router = APIRouter()
 
 
 @router.get("/")
 def read_events() -> EventListSchema:
-    print(os.getenv("DATABASE_URL"))
+    print(os.getenv("DATABASE_URL"),DATABASE_URL)
     return {
         "results": [{"id":1},{"id":1,},{"id":1,}]
     }
 
 
 @router.post("/")
-def create_events(payload:EventCreateSchema)->EventSchema:
+def create_events(payload:EventCreateSchema)->EventModel:
     print(payload.page)
     data = payload.model_dump()
     return {
@@ -28,13 +29,13 @@ def create_events(payload:EventCreateSchema)->EventSchema:
     }
 
 @router.get("/{events_id}")
-def get_events(events_id: int) -> EventSchema:
+def get_events(events_id: int) -> EventModel:
     return {
        "id": events_id
     }
 
 @router.put("/{events_id}")
-def update_events(events_id: int, payload : EventUpdateSchema) -> EventSchema:
+def update_events(events_id: int, payload : EventUpdateSchema) -> EventModel:
     print(payload.description)
     data = payload.model_dump()
     return {
@@ -44,7 +45,7 @@ def update_events(events_id: int, payload : EventUpdateSchema) -> EventSchema:
     }
 
 @router.delete("/{events_id}")
-def delete_events(events_id: int) -> EventSchema:
+def delete_events(events_id: int) -> EventModel:
     return {
        "id": events_id,
     }
